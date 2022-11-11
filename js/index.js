@@ -105,6 +105,7 @@ function stopDrawing() {
     document.getElementById("speed").innerText = 0;
     document.getElementById("angle").innerText = 0;
 
+    ws.send(0)
 }
 
 function Draw(event) {
@@ -114,14 +115,6 @@ function Draw(event) {
         background();
         var angle_in_degrees,x, y, speed;
         var angle = Math.atan2((coord.y - y_orig), (coord.x - x_orig));
-
-        if (Math.sign(angle) == -1) {
-            angle_in_degrees = Math.round(-angle * 180 / Math.PI);
-        }
-        else {
-            angle_in_degrees =Math.round( 360 - angle * 180 / Math.PI);
-        }
-
 
         if (is_it_in_the_circle()) {
             joystick(coord.x, coord.y);
@@ -137,17 +130,38 @@ function Draw(event) {
 
         getPosition(event);
 
-        var speed =  Math.round(100 * Math.sqrt(Math.pow(x - x_orig, 2) + Math.pow(y - y_orig, 2)) / radius);
-
         var x_relative = Math.round(x - x_orig);
         var y_relative = Math.round(y - y_orig);
 
+        var speed =  Math.round(100 * Math.sqrt(Math.pow(x - x_orig, 2) + Math.pow(y - y_orig, 2)) / radius);
+
+        if (Math.sign(angle) == -1) {
+            angle_in_degrees = Math.round(-angle * 180 / Math.PI);
+        }
+        else {
+            angle_in_degrees = Math.round( 360 - angle * 180 / Math.PI);
+            speed = speed * -1;
+        }
+
+
 
         document.getElementById("x_coordinate").innerText =  x_relative;
-        document.getElementById("y_coordinate").innerText =y_relative ;
+        document.getElementById("y_coordinate").innerText = y_relative ;
         document.getElementById("speed").innerText = speed;
         document.getElementById("angle").innerText = angle_in_degrees;
+        let right; //90 - 270
+        if (angle_in_degrees >= 90 && angle_in_degrees <= 270) {
+            right = (90 - Math.abs(angle_in_degrees - 180)) / 90 * 100;
+        } else {
+            right = 0;
+        }
+        document.getElementById("mls").innerText = speed / 100;
+        document.getElementById("mrs").innerText = speed * right / 100;
 
         send( x_relative,y_relative,speed,angle_in_degrees);
     }
+}
+
+function send(x,y,speed, angle) {
+    ws.send(speed);
 }
