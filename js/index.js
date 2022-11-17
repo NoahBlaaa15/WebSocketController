@@ -31,8 +31,8 @@ window.addEventListener('load', () => {
 
     document.getElementById("x_coordinate").innerText = 0;
     document.getElementById("y_coordinate").innerText = 0;
-    document.getElementById("speed").innerText = 0;
-    document.getElementById("angle").innerText = 0;
+    document.getElementById("mls").innerText = 0;
+    document.getElementById("mrs").innerText = 0;
 });
 
 var width, height, radius, x_orig, y_orig;
@@ -102,10 +102,12 @@ function stopDrawing() {
     joystick(width / 2, height / 3);
     document.getElementById("x_coordinate").innerText = 0;
     document.getElementById("y_coordinate").innerText = 0;
-    document.getElementById("speed").innerText = 0;
-    document.getElementById("angle").innerText = 0;
+    document.getElementById("mls").innerText = 0;
+    document.getElementById("mrs").innerText = 0;
 
-    ws.send(0)
+    if (ws != null) {
+        ws.send("0;0");
+    }
 }
 
 function Draw(event) {
@@ -113,8 +115,8 @@ function Draw(event) {
     if (paint) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         background();
-        var angle_in_degrees,x, y, speed;
-        var angle = Math.atan2((coord.y - y_orig), (coord.x - x_orig));
+        let angle_in_degrees,x, y;
+        let angle = Math.atan2((coord.y - y_orig), (coord.x - x_orig));
 
         if (is_it_in_the_circle()) {
             joystick(coord.x, coord.y);
@@ -122,46 +124,52 @@ function Draw(event) {
             y = coord.y;
         }
         else {
-            x = radius * Math.cos(angle) + x_orig;
-            y = radius * Math.sin(angle) + y_orig;
+            x = (radius * Math.cos(angle) + x_orig);
+            y = (radius * Math.sin(angle) + y_orig);
             joystick(x, y);
         }
 
 
         getPosition(event);
 
-        var x_relative = Math.round(x - x_orig);
-        var y_relative = Math.round(y - y_orig);
+        let x_relative = Math.round((x - x_orig)/2);
+        let y_relative = Math.round((y - y_orig)/-2);
 
-        var speed =  Math.round(100 * Math.sqrt(Math.pow(x - x_orig, 2) + Math.pow(y - y_orig, 2)) / radius);
+        //let speed =  Math.round(100 * Math.sqrt(Math.pow(x - x_orig, 2) + Math.pow(y - y_orig, 2)) / radius);
 
-        if (Math.sign(angle) == -1) {
+       /* if (Math.sign(angle) === -1) {
             angle_in_degrees = Math.round(-angle * 180 / Math.PI);
         }
         else {
             angle_in_degrees = Math.round( 360 - angle * 180 / Math.PI);
             speed = speed * -1;
-        }
-
-
+        }*/
 
         document.getElementById("x_coordinate").innerText =  x_relative;
         document.getElementById("y_coordinate").innerText = y_relative ;
-        document.getElementById("speed").innerText = speed;
-        document.getElementById("angle").innerText = angle_in_degrees;
-        let right; //90 - 270
-        if (angle_in_degrees >= 90 && angle_in_degrees <= 270) {
-            right = (90 - Math.abs(angle_in_degrees - 180)) / 90 * 100;
-        } else {
-            right = 0;
-        }
-        document.getElementById("mls").innerText = speed / 100;
-        document.getElementById("mrs").innerText = speed * right / 100;
+        //document.getElementById("speed").innerText = speed;
+        //document.getElementById("angle").innerText = angle_in_degrees;
 
-        send( x_relative,y_relative,speed,angle_in_degrees);
+        let mls = x_relative + y_relative;
+        if (mls > 100)
+            mls = 100;
+        if (mls < -100)
+            mls = -100;
+        let mrs = y_relative - x_relative;
+        if (mrs > 100)
+            mrs = 100;
+        if (mrs < -100)
+            mrs = -100;
+
+        document.getElementById("mls").innerText = mls;
+        document.getElementById("mrs").innerText = mrs;
+
+        send( x_relative,y_relative,mls, mrs);
     }
 }
 
-function send(x,y,speed, angle) {
-    ws.send(speed);
+function send(x,y,mls,mrs) {
+    if (ws != null) {
+        ws.send(mls + ";" + mrs);
+    }
 }
