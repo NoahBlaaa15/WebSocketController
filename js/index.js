@@ -106,7 +106,7 @@ function stopDrawing() {
     document.getElementById("mrs").innerText = 0;
 
     if (ws != null) {
-        ws.send("0;0");
+        send(0,0);
     }
 }
 
@@ -164,12 +164,19 @@ function Draw(event) {
         document.getElementById("mls").innerText = mls;
         document.getElementById("mrs").innerText = mrs;
 
-        send( x_relative,y_relative,mls, mrs);
+        send(mls, mrs);
     }
 }
 
-function send(x,y,mls,mrs) {
+let lastL = 0;
+let lastR = 0;
+
+function send(mls,mrs) {
     if (ws != null) {
-        ws.send(mls + ";" + mrs);
+        if (mls != lastL || mrs != lastR) {
+            lastL = mls;
+            lastR = mrs;
+            ws.send(mls + ";" + mrs);
+        }
     }
 }
