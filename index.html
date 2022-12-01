@@ -5,20 +5,22 @@
     <title>Roball</title>
     <script type="application/javascript" src="js/index.js"></script>
 </head>
-<body>
-<input id="ip" type="text" placeholder="IP">
-<input id="port" type="number" placeholder="Port">
-<button onclick="htmlConnect()">Connect</button>
+<body style="margin: 0">
+<div style="height: 100vh;width: 100vw;">
+    <input id="ip" type="text" placeholder="IP">
+    <input id="port" type="number" placeholder="Port">
+    <button onclick="htmlConnect()">Connect</button>
 
-<h1 style="text-align:center">Roball</h1>
-<p style="text-align: center;">
-    X: <span id="x_coordinate"> </span>
-    Y: <span id="y_coordinate"> </span>
-    Speed: <span id="speed"> </span> %
-    Angle: <span id="angle"> </span>
-    Motor Left speed: <span id="mls"> </span>
-    Motor right speed: <span id="mrs"> </span>
-</p>
-<canvas id="canvas" ></canvas>
+    <h1 style="text-align:center">Roball</h1>
+    <p style="text-align: center;">
+        X: <span id="x_coordinate"> </span>
+        Y: <span id="y_coordinate"> </span>
+        Speed: <span id="speed"> </span> %
+        Angle: <span id="angle"> </span>
+        Motor Left speed: <span id="mls"> </span>
+        Motor right speed: <span id="mrs"> </span>
+    </p>
+    <canvas id="canvas" ></canvas>
+</div>
 </body>
 </html>
