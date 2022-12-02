@@ -39,7 +39,7 @@ var width, height, radius, x_orig, y_orig;
 function resize() {
     width = window.innerWidth;
     radius = 200;
-    height = 800;
+    height = window.innerHeight-150;
     ctx.canvas.width = width;
     ctx.canvas.height = height;
     background();
