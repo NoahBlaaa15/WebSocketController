@@ -12,46 +12,53 @@ let htmlConnect = () => {
 }
 
 window.onload = () => {
+    htmlConnect()
     //Up Arrow
     document.getElementById("up").addEventListener("mousedown", ev => {
-        alert('up')
+        //alert('down')
+        send(1)
     })
     document.getElementById("up").addEventListener("mouseup", ev => {
-        alert('down')
+        //alert('up')
+        send(0)
     })
 
     //Right Arrow
     document.getElementById("right").addEventListener("mousedown", ev => {
-        alert('up')
+        //alert('down')
+        send(3)
     })
     document.getElementById("right").addEventListener("mouseup", ev => {
-        alert('down')
+        //alert('up')
+        send(0)
     })
 
     //Down Arrow
     document.getElementById("down").addEventListener("mousedown", ev => {
-        alert('up')
+        //alert('down')
+        send(2)
     })
     document.getElementById("down").addEventListener("mouseup", ev => {
-        alert('down')
+        //alert('up')
+        send(0)
     })
 
     //Left Arrow
     document.getElementById("left").addEventListener("mousedown", ev => {
-        alert('up')
+        //alert('down')
+        send(4)
     })
     document.getElementById("left").addEventListener("mouseup", ev => {
-        alert('down')
+        //alert('up')
+        send(0)
     })
 }
 
 let lastX;
-let lastY;
 
-function send(x, y) {
+function send(x) {
     if (ws != null) {
         lastX = x;
-        lastY = y;
-        ws.send(x + ";" + y);
+        ws.send(x);
     }
 }
